@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -7,19 +6,23 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     // Components
     private CharacterController _characterController;
 
+    // Immutable Parameters
+    private readonly float _groundStickForce = -1;
+
     // Parameters
     [Header("Movement Parameters")]
     [SerializeField, Min(0)] private float _moveSpeed = 15.0f;
-    [SerializeField, Min(0)] private float _airControlMultiplier = 0.5f;
+    [SerializeField, Min(0)] private float _airControlMultiplier = 1.2f;
 
     [Header("Jump Parameters")]
     [SerializeField, Min(0)] private float _jumpHeight = 5.0f;
-    [SerializeField, Min(0)] private float _jumpToleranceTime = 0.25f;
     [SerializeField, Range(0, 1)] private float _jumpCutMultiplier = 0.4f;
+    [Space]
+    [SerializeField, Min(0)] private float _jumpBufferToleranceTime = 0.25f;
 
     [Header("Gravity Parameters")]
     [SerializeField, Min(0)] private float _gravity = 35.0f;
-    [SerializeField, Min(1)] private float _fallGravityMultiplier = 1.5f;
+    [SerializeField, Min(0)] private float _fallGravityMultiplier = 1.5f;
 
     // Horizontal Movement
     private Vector3 _movementDirection;
@@ -30,7 +33,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     // States
     private bool _isGrounded;
     private bool _jumpRequested;
-    private bool _hasJumped;
+    private bool _hasJumped; // Has Jumped exists cuz if the player was launched up from an enemy or a scenario prop the gravity multiplier will not be active.
 
     // Timer
     private float _jumpBufferTimer;
@@ -44,7 +47,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     private void Update()
     {
         UpdateTimer();
-
+        
         GroundCheck();
         HandleJump();
         ApplyGravity();
@@ -63,7 +66,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         if (isJumpPressed)
         {
             _jumpRequested = true;
-            _jumpBufferTimer = _jumpToleranceTime;
+            _jumpBufferTimer = _jumpBufferToleranceTime;
             return;
         }
 
@@ -80,15 +83,17 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
         _hasJumped = false;
 
-        // Mantém o jogador no chão, impedindo "tropeços".
+        // Keep the player on the ground
         if (_verticalVelocity < 0f)
-            _verticalVelocity = -1f;
+            _verticalVelocity = _groundStickForce;
     }
 
     private void HandleJump()
     {
+        bool canJump = _isGrounded;
         bool hasBufferedJump = _jumpRequested || _jumpBufferTimer > 0f;
-        if (!_isGrounded || !hasBufferedJump) return;
+
+        if (!canJump || !hasBufferedJump) return;
 
         _verticalVelocity = GetJumpForce();
 
@@ -96,7 +101,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         _jumpRequested = false;
         _hasJumped = true;
     }
-
+    
     private void ApplyGravity()
     {
         if (_isGrounded) return;
@@ -137,6 +142,19 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     private float GetJumpForce()
     {
+        /* Essa função usa a equação de Torricelli pra calcular a força do pulo.
+         * Equação de Torricelli - é usada pra calcular velocidade, aceleração ou distância percorrida sem ter o valor do tempo.
+         * A equação -> Vf^2 = Vi^2 + 2 * a * DeltaS.
+         * (Velocidade final ao quadrado é igual a Velocidade inicial ao quadrado mais 2 vezes a aceleração vezes a Variação de posição [Delta S]).
+         * 
+         * No caso:
+         * Velocidade inicial é igual a zero, então é desconsiderada na soma.
+         * A aceleração é a da gravidade - já que é a força que temos que vencer para subir.
+         * A variação de posição (DeltaS) é a altura do pulo.
+         * O número 2 é uma constante da própria fórmula.
+         * E a raiz quadrada vem do corte do expoente da velocidade final.
+         */
+
         return Mathf.Sqrt(_jumpHeight * 2f * _gravity);
     }
 
