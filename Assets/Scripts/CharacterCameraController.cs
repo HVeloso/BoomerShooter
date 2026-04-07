@@ -3,24 +3,27 @@ using UnityEngine;
 
 public class CharacterCameraController : MonoBehaviour
 {
+    [Header("Camera References")]
     [SerializeField] private CinemachineCamera _cineCamera;
     [SerializeField] private CinemachineInputAxisController _cameraInputs;
     [SerializeField] private CinemachinePanTilt _cameraPanTilt;
     [SerializeField] private Transform _characterBody;
-    [Space]
+    
+    [Header("Camera Sensitivity")]
     [SerializeField][Min(0)] private float _pitchSensitivity;
     [SerializeField][Min(0)] private float _yawSensitivity;
     [SerializeField][Min(0)] private float _cameraRollVelocity;
-    [Space]
+    
+    [Header("Camera Limits")]
     [SerializeField] private float _maxPitch;
     [SerializeField] private float _minPitch;
-    [Space]
     [SerializeField][Min(0)] private float _maxRollAngle;
-
+    
+    // Rool Parameters
     private Vector2 _rollDirection;
+    private float _rollValue; // Rotação no eixo z (gira para os lados)
 
-    private float _roll; // Rotação no eixo z (gira para os lados)
-
+    // MonoBehaviour
     private void OnEnable()
     {
         PlayerInputsHandler.MovementDirectionInputed += OnMoveInputed;
@@ -31,12 +34,6 @@ public class CharacterCameraController : MonoBehaviour
         PlayerInputsHandler.MovementDirectionInputed -= OnMoveInputed;
     }
 
-    private void LateUpdate()
-    {
-        UpdateCameraRoll();
-        UpdateCharacterRotation();
-    }
-
     private void Start()
     {
         SettingUpCinemachineCamera();
@@ -44,14 +41,22 @@ public class CharacterCameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        _roll = transform.localEulerAngles.z;
+        _rollValue = transform.localEulerAngles.z;
     }
 
+    private void LateUpdate()
+    {
+        UpdateCameraRoll();
+        UpdateCharacterRotation();
+    }
+
+    // Inputs
     private void OnMoveInputed(Vector2 inputDirection)
     {
         _rollDirection = inputDirection;
     }
-
+    
+    // Initialization
     private void SettingUpCinemachineCamera()
     {
         _cameraInputs.Controllers[0].Input.Gain = _yawSensitivity; // horizontal
@@ -60,6 +65,7 @@ public class CharacterCameraController : MonoBehaviour
         _cameraPanTilt.TiltAxis.Range = new(_minPitch, _maxPitch);
     }
 
+    // Angle Functions
     private void UpdateCameraRoll()
     {
         float targetRoll = 0f;
@@ -67,8 +73,8 @@ public class CharacterCameraController : MonoBehaviour
         if (_rollDirection.x != 0f)
             targetRoll = -Mathf.Sign(_rollDirection.x) * _maxRollAngle;
 
-        _roll = Mathf.LerpAngle(_roll, targetRoll, _cameraRollVelocity * Time.deltaTime);
-        _cineCamera.Lens.Dutch = _roll;
+        _rollValue = Mathf.LerpAngle(_rollValue, targetRoll, _cameraRollVelocity * Time.deltaTime);
+        _cineCamera.Lens.Dutch = _rollValue;
     }
 
     private void UpdateCharacterRotation()
@@ -79,8 +85,10 @@ public class CharacterCameraController : MonoBehaviour
         _characterBody.localRotation = Quaternion.Euler(currentRotation);
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         SettingUpCinemachineCamera();
     }
+#endif
 }
