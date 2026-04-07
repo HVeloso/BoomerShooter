@@ -16895,7 +16895,7 @@ MonoBehaviour:
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-        Gain: 3
+        Gain: 6
         CancelDeltaTime: 0
       InputValue: 0
       Driver:
@@ -16906,7 +16906,7 @@ MonoBehaviour:
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-        Gain: -3
+        Gain: -6
         CancelDeltaTime: 0
       InputValue: 0
       Driver:
@@ -28823,12 +28823,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cce02b17ca0f94db8ca6bdc2997c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cineCamera: {fileID: 755087961}
   _cameraInputs: {fileID: 755087959}
   _cameraPanTilt: {fileID: 755087964}
-  _characterHead: {fileID: 1298458243}
   _characterBody: {fileID: 1341503522}
-  _pitchSensitivity: 3
-  _yawSensitivity: 3
+  _pitchSensitivity: 6
+  _yawSensitivity: 6
   _cameraRollVelocity: 10
   _maxPitch: 70
   _minPitch: -45

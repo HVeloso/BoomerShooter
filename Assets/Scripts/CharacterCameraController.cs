@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class CharacterCameraController : MonoBehaviour
 {
+    [SerializeField] private CinemachineCamera _cineCamera;
     [SerializeField] private CinemachineInputAxisController _cameraInputs;
     [SerializeField] private CinemachinePanTilt _cameraPanTilt;
-    [SerializeField] private Transform _characterHead;
     [SerializeField] private Transform _characterBody;
     [Space]
     [SerializeField][Min(0)] private float _pitchSensitivity;
@@ -68,14 +68,15 @@ public class CharacterCameraController : MonoBehaviour
             targetRoll = -Mathf.Sign(_rollDirection.x) * _maxRollAngle;
 
         _roll = Mathf.LerpAngle(_roll, targetRoll, _cameraRollVelocity * Time.deltaTime);
-
-        Vector3 currentEuler = transform.localEulerAngles;
-        _characterHead.localRotation = Quaternion.Euler(currentEuler.x, currentEuler.y, _roll);
+        _cineCamera.Lens.Dutch = _roll;
     }
 
     private void UpdateCharacterRotation()
     {
-        _characterBody.localEulerAngles = _cameraInputs.transform.localEulerAngles;
+        Vector3 currentRotation = _characterBody.eulerAngles;
+        currentRotation.y = _cameraPanTilt.PanAxis.Value;
+
+        _characterBody.localRotation = Quaternion.Euler(currentRotation);
     }
 
     private void OnValidate()
