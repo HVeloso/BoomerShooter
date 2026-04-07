@@ -19,6 +19,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     [SerializeField, Range(0, 1)] private float _jumpCutMultiplier = 0.4f;
     [Space]
     [SerializeField, Min(0)] private float _jumpBufferToleranceTime = 0.25f;
+    [SerializeField, Min(0)] private float _coyoteToleranceTime = 0.15f;
 
     [Header("Gravity Parameters")]
     [SerializeField, Min(0)] private float _gravity = 35.0f;
@@ -37,6 +38,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     // Timer
     private float _jumpBufferTimer;
+    private float _coyoteTimer;
 
     // MonoBehaviours
     private void Awake()
@@ -47,7 +49,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     private void Update()
     {
         UpdateTimer();
-        
+
         GroundCheck();
         HandleJump();
         ApplyGravity();
@@ -65,13 +67,16 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     {
         if (isJumpPressed)
         {
-            _jumpRequested = true;
+            if (_isGrounded) _jumpRequested = true;
             _jumpBufferTimer = _jumpBufferToleranceTime;
             return;
         }
 
+        _jumpRequested = false;
+        _jumpBufferTimer = 0f;
+
         if (_verticalVelocity > 0f)
-            _verticalVelocity = _jumpCutMultiplier;
+            _verticalVelocity *= _jumpCutMultiplier;
     }
 
     // Control Functions
@@ -81,6 +86,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
         if (!_isGrounded) return;
 
+        _coyoteTimer = _coyoteToleranceTime;
         _hasJumped = false;
 
         // Keep the player on the ground
@@ -90,7 +96,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     private void HandleJump()
     {
-        bool canJump = _isGrounded;
+        bool canJump = _isGrounded || _coyoteTimer > 0f;
         bool hasBufferedJump = _jumpRequested || _jumpBufferTimer > 0f;
 
         if (!canJump || !hasBufferedJump) return;
@@ -98,13 +104,14 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         _verticalVelocity = GetJumpForce();
 
         _jumpBufferTimer = 0f;
+        _coyoteTimer = 0f;
         _jumpRequested = false;
         _hasJumped = true;
     }
-    
+
     private void ApplyGravity()
     {
-        if (_isGrounded) return;
+        if (_isGrounded && _verticalVelocity <= 0f) return;
 
         _verticalVelocity -= GetTotalGravity() * Time.deltaTime;
     }
@@ -118,7 +125,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         Vector3 totalVelocity = horizontalVelocity + verticalVelocity;
         _characterController.Move(totalVelocity * Time.deltaTime);
     }
-    
+
     private Vector3 GetHorizontalVelocity()
     {
         float currentMoveSpeed = _moveSpeed;
@@ -163,5 +170,8 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     {
         if (_jumpBufferTimer > 0f)
             _jumpBufferTimer -= Time.deltaTime;
+
+        if (_coyoteTimer > 0f)
+            _coyoteTimer -= Time.deltaTime;
     }
 }
