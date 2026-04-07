@@ -8,17 +8,20 @@ public class CharacterCameraController : MonoBehaviour
     [SerializeField] private CinemachineInputAxisController _cameraInputs;
     [SerializeField] private CinemachinePanTilt _cameraPanTilt;
     [SerializeField] private Transform _characterBody;
-    
+
     [Header("Camera Sensitivity")]
     [SerializeField][Min(0)] private float _pitchSensitivity;
     [SerializeField][Min(0)] private float _yawSensitivity;
     [SerializeField][Min(0)] private float _cameraRollVelocity;
-    
+
     [Header("Camera Limits")]
     [SerializeField] private float _maxPitch;
     [SerializeField] private float _minPitch;
     [SerializeField][Min(0)] private float _maxRollAngle;
-    
+
+    [Header("Testes")]
+    [SerializeField] private bool _roolWithMouse;
+
     // Rool Parameters
     private Vector2 _rollDirection;
     private float _rollValue; // Rotação no eixo z (gira para os lados)
@@ -55,7 +58,7 @@ public class CharacterCameraController : MonoBehaviour
     {
         _rollDirection = inputDirection;
     }
-    
+
     // Initialization
     private void SettingUpCinemachineCamera()
     {
@@ -69,9 +72,12 @@ public class CharacterCameraController : MonoBehaviour
     private void UpdateCameraRoll()
     {
         float targetRoll = 0f;
+        float direction = _roolWithMouse ?
+            _cameraInputs.Controllers[0].InputValue :
+            _rollDirection.x;
 
-        if (_rollDirection.x != 0f)
-            targetRoll = -Mathf.Sign(_rollDirection.x) * _maxRollAngle;
+        if (direction != 0f)
+            targetRoll = -Mathf.Sign(direction) * _maxRollAngle;
 
         _rollValue = Mathf.LerpAngle(_rollValue, targetRoll, _cameraRollVelocity * Time.deltaTime);
         _cineCamera.Lens.Dutch = _rollValue;
