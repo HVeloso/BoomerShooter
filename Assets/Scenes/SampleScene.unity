@@ -28829,10 +28829,10 @@ MonoBehaviour:
   _characterBody: {fileID: 1341503522}
   _pitchSensitivity: 6
   _yawSensitivity: 6
-  _cameraRollVelocity: 10
+  _cameraRollVelocity: 5
   _maxPitch: 70
   _minPitch: -45
-  _maxRollAngle: 3
+  _maxRollAngle: 1.5
 --- !u!1 &1305612723
 GameObject:
   m_ObjectHideFlags: 0
@@ -38841,9 +38841,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ff9127d49c6804f8f73f9b62690f8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  smoothValue: 0.1
   _moveSpeed: 15
   _airControlMultiplier: 1.2
-  _jumpHeight: 4
+  _jumpHeight: 6
+  _allowJumpCut: 1
   _jumpCutMultiplier: 0.4
   _jumpBufferToleranceTime: 0.25
   _coyoteToleranceTime: 0.1
@@ -46045,10 +46047,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf43a41d16c2d1445b466a9af0e23c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHorizontalRange: 250
-  _minHorizontalRange: -250
-  _maxVerticalRange: 250
-  _minVerticalRange: -250
+  _maxHorizontalRange: 100
+  _minHorizontalRange: -100
+  _maxVerticalRange: 100
+  _minVerticalRange: -100
   _scenarioObstacles:
   - {fileID: 226778026}
   - {fileID: 1574494259}

@@ -19,9 +19,6 @@ public class CharacterCameraController : MonoBehaviour
     [SerializeField] private float _minPitch;
     [SerializeField][Min(0)] private float _maxRollAngle;
 
-    [Header("Testes")]
-    [SerializeField] private bool _roolWithMouse;
-
     // Rool Parameters
     private Vector2 _rollDirection;
     private float _rollValue; // Rotação no eixo z (gira para os lados)
@@ -72,12 +69,9 @@ public class CharacterCameraController : MonoBehaviour
     private void UpdateCameraRoll()
     {
         float targetRoll = 0f;
-        float direction = _roolWithMouse ?
-            _cameraInputs.Controllers[0].InputValue :
-            _rollDirection.x;
 
-        if (direction != 0f)
-            targetRoll = -Mathf.Sign(direction) * _maxRollAngle;
+        if (_rollDirection.x != 0f)
+            targetRoll = -Mathf.Sign(_rollDirection.x) * _maxRollAngle;
 
         _rollValue = Mathf.LerpAngle(_rollValue, targetRoll, _cameraRollVelocity * Time.deltaTime);
         _cineCamera.Lens.Dutch = _rollValue;

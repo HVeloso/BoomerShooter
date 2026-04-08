@@ -11,13 +11,14 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     // Parameters
     [Header("Movement Parameters")]
+    [SerializeField, Min(0)] private float smoothValue = 0.05f;
     [SerializeField, Min(0)] private float _moveSpeed = 15.0f;
     [SerializeField, Min(0)] private float _airControlMultiplier = 1.2f;
 
     [Header("Jump Parameters")]
     [SerializeField, Min(0)] private float _jumpHeight = 5.0f;
+    [SerializeField] private bool _allowJumpCut;
     [SerializeField, Range(0, 1)] private float _jumpCutMultiplier = 0.4f;
-    [Space]
     [SerializeField, Min(0)] private float _jumpBufferToleranceTime = 0.25f;
     [SerializeField, Min(0)] private float _coyoteToleranceTime = 0.15f;
 
@@ -27,6 +28,8 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     // Horizontal Movement
     private Vector3 _movementDirection;
+    private Vector3 _currentHorizontal;
+    private Vector3 _horizontalVelocitySmooth; // Internal factor that SmoothDamp uses to calculate smoothing over time.
 
     // Vertical Movement
     private float _verticalVelocity;
@@ -75,7 +78,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         _jumpRequested = false;
         _jumpBufferTimer = 0f;
 
-        if (_verticalVelocity > 0f)
+        if (_verticalVelocity > 0f && _allowJumpCut)
             _verticalVelocity *= _jumpCutMultiplier;
     }
 
@@ -122,7 +125,14 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         Vector3 horizontalVelocity = GetHorizontalVelocity();
         Vector3 verticalVelocity = Vector3.up * _verticalVelocity;
 
-        Vector3 totalVelocity = horizontalVelocity + verticalVelocity;
+        _currentHorizontal = Vector3.SmoothDamp(
+            _currentHorizontal,
+            horizontalVelocity,
+            ref _horizontalVelocitySmooth,
+            smoothValue
+        );
+
+        Vector3 totalVelocity = _currentHorizontal + verticalVelocity;
         _characterController.Move(totalVelocity * Time.deltaTime);
     }
 
