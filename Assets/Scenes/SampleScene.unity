@@ -38845,6 +38845,7 @@ MonoBehaviour:
   _moveSpeed: 15
   _airControlMultiplier: 1.2
   _jumpHeight: 6
+  _jumpsInAir: 0
   _allowJumpCut: 1
   _jumpCutMultiplier: 0.4
   _jumpBufferToleranceTime: 0.25

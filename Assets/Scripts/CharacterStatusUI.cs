@@ -7,14 +7,7 @@ public class CharacterStatusUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _uiText;
     [SerializeField] private Transform _playerBody;
 
-    // - - - - - <
     private float _higherPosition = 0f;
-    private float _starterPosition;
-
-    private void Start()
-    {
-        _starterPosition = _playerBody.transform.position.y;
-    }
 
     private void Update()
     {
@@ -26,7 +19,6 @@ public class CharacterStatusUI : MonoBehaviour
         StringBuilder stringBuilder = new();
 
         float currentPos = _playerBody.position.y;
-        currentPos -= _starterPosition;
         
         if (_higherPosition < currentPos)
             _higherPosition = currentPos;

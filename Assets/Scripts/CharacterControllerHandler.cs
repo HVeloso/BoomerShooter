@@ -17,8 +17,11 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     [Header("Jump Parameters")]
     [SerializeField, Min(0)] private float _jumpHeight = 5.0f;
+    [SerializeField, Min(0)] private int _jumpsInAir = 0;
+    [Space]
     [SerializeField] private bool _allowJumpCut;
     [SerializeField, Range(0, 1)] private float _jumpCutMultiplier = 0.4f;
+    [Space]
     [SerializeField, Min(0)] private float _jumpBufferToleranceTime = 0.25f;
     [SerializeField, Min(0)] private float _coyoteToleranceTime = 0.15f;
 
@@ -33,6 +36,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     // Vertical Movement
     private float _verticalVelocity;
+    private int _currentJumpsInAir;
 
     // States
     private bool _isGrounded;
@@ -71,15 +75,21 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         if (isJumpPressed)
         {
             if (_isGrounded) _jumpRequested = true;
+            else _currentJumpsInAir--;
+            
             _jumpBufferTimer = _jumpBufferToleranceTime;
             return;
         }
+        
+        if (_allowJumpCut)
+        {
+            _jumpBufferTimer = 0f;
+
+            if (_verticalVelocity > 0f)
+                _verticalVelocity *= _jumpCutMultiplier;
+        }
 
         _jumpRequested = false;
-        _jumpBufferTimer = 0f;
-
-        if (_verticalVelocity > 0f && _allowJumpCut)
-            _verticalVelocity *= _jumpCutMultiplier;
     }
 
     // Control Functions
@@ -91,6 +101,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
         _coyoteTimer = _coyoteToleranceTime;
         _hasJumped = false;
+        _currentJumpsInAir = _jumpsInAir;
 
         // Keep the player on the ground
         if (_verticalVelocity < 0f)
@@ -99,7 +110,7 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     private void HandleJump()
     {
-        bool canJump = _isGrounded || _coyoteTimer > 0f;
+        bool canJump = _isGrounded || _coyoteTimer > 0f || _currentJumpsInAir >= 0;
         bool hasBufferedJump = _jumpRequested || _jumpBufferTimer > 0f;
 
         if (!canJump || !hasBufferedJump) return;
