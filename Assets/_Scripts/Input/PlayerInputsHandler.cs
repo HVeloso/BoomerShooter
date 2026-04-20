@@ -8,6 +8,8 @@ public class PlayerInputsHandler : MonoBehaviour
     public static event Action<Vector2> MovementDirectionInputed;
     public static event Action<Vector2> LookDirectionInputed;
     public static event Action<bool> JumpInputed;
+    public static event Action<bool> ShootInputed;
+    public static event Action<float> ScrollInputed;
 
     private void OnMove(InputValue value)
     {
@@ -31,5 +33,18 @@ public class PlayerInputsHandler : MonoBehaviour
             JumpInputed?.Invoke(true);
         else
             JumpInputed?.Invoke(false);
+    }
+
+    private void OnShoot(InputValue value)
+    {
+        if (value.isPressed)
+            ShootInputed?.Invoke(true);
+        else
+            ShootInputed?.Invoke(false);
+    }
+
+    private void OnScroll(InputValue value)
+    {
+        ScrollInputed?.Invoke(value.Get<float>());
     }
 }
