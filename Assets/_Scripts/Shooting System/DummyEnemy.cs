@@ -20,13 +20,12 @@ public class DummyEnemy : MonoBehaviour, IHittable
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    void IHittable.Hit(Vector3 bulletOriginPosition, float damage)
+    void IHittable.Hit(ProjectileParameters parameters)
     {
         StopAllCoroutines();
         StartCoroutine(ShowHit(_playerTransform));
 
-        Vector3 forceDirection = (transform.position - bulletOriginPosition).normalized;
-        _dummyRigidbody.AddForce(forceDirection * damage, ForceMode.Impulse);
+        _dummyRigidbody.AddForce(parameters.Direction * parameters.Damage, ForceMode.Impulse);
     }
 
     private IEnumerator ShowHit(Transform player)
