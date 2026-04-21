@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IHittable
 {
-    public void Hit(Transform player, float damage);
+    public void Hit(Vector3 bulletOriginPosition, float damage);
 }

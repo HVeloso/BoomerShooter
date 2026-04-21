@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-public class RaycastShooting : MonoBehaviour
+public class ProjectileShooting : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _gunNameTextMesh;
+    [SerializeField] private GameObject _bulletPrefab;
     [Space]
     [SerializeField] private List<GunParameters> _gunParameters;
     private GunParameters _currentGun;
@@ -60,25 +61,30 @@ public class RaycastShooting : MonoBehaviour
     {
         while (true)
         {
-            if (_shootingTimer <= 0f)
+            yield return null;
+            if (_shootingTimer > 0f) continue;
+
+            for (int i = 0; i < _currentGun.BulletsPerShoot; i++)
             {
                 Shoot();
-                _shootingTimer = _currentGun.FireRate;
             }
-            
-            yield return null;
+
+            _shootingTimer = _currentGun.FireRate;
         }
     }
 
     private void Shoot()
     {
-        Ray shootingRay = new(transform.position, transform.forward);
-        if (!Physics.Raycast(shootingRay, out RaycastHit hit, _currentGun.Range)) return;
-        
-        if (hit.collider.TryGetComponent(out IHittable hittable))
-        {
-            hittable.Hit(transform.position, _currentGun.Damage);
-        }
+        float spread = _currentGun.SpreadAngle;
+        Vector3 bulletDirection = Quaternion.Euler(
+            Random.Range(-spread, spread),
+            Random.Range(-spread, spread),
+            0f)
+            * transform.forward;
+
+        GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        bullet.GetComponent<BulletMovement>().ShootBullet(bulletDirection, _currentGun.Range);
+        bullet.GetComponent<BulletCollision>().SetDamage(_currentGun.Damage);
     }
 
     private void ShootingTimer()

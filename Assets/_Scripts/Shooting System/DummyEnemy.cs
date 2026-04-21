@@ -2,10 +2,12 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class DummyEnemy : MonoBehaviour, IHittable
 {
     [SerializeField] private TextMeshPro _hitTextMesh;
     private Rigidbody _dummyRigidbody;
+    private Transform _playerTransform;
 
     private void Awake()
     {
@@ -13,12 +15,17 @@ public class DummyEnemy : MonoBehaviour, IHittable
         _hitTextMesh.gameObject.SetActive(false);
     }
 
-    public void Hit(Transform player, float damage)
+    private void Start()
+    {
+        _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    void IHittable.Hit(Vector3 bulletOriginPosition, float damage)
     {
         StopAllCoroutines();
-        StartCoroutine(ShowHit(player));
+        StartCoroutine(ShowHit(_playerTransform));
 
-        Vector3 forceDirection = (transform.position - player.position).normalized;
+        Vector3 forceDirection = (transform.position - bulletOriginPosition).normalized;
         _dummyRigidbody.AddForce(forceDirection * damage, ForceMode.Impulse);
     }
 

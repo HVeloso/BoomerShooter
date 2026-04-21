@@ -3963,6 +3963,37 @@ Transform:
   - {fileID: 1208017236}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &152294704
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 152294705}
+  m_Layer: 0
+  m_Name: Gun Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &152294705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152294704}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 755087962}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &152507205
 GameObject:
   m_ObjectHideFlags: 0
@@ -17842,7 +17873,7 @@ GameObject:
   - component: {fileID: 755087964}
   - component: {fileID: 755087959}
   m_Layer: 0
-  m_Name: CinemachineCamera
+  m_Name: Character CinemachineCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17946,6 +17977,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1256406631}
+  - {fileID: 152294705}
   m_Father: {fileID: 1298458243}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &755087963
@@ -29802,7 +29834,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1256406631}
-  - component: {fileID: 1256406632}
+  - component: {fileID: 1256406633}
   m_Layer: 0
   m_Name: Raycast Shoot Handler
   m_TagString: Untagged
@@ -29825,7 +29857,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 755087962}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1256406632
+--- !u!114 &1256406633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29834,10 +29866,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1256406630}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11dcd0493e529c54b9cc17989bbf79bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d9429bf463ffdf4bbab6ed0481057b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _gunNameTextMesh: {fileID: 829828932}
+  _bulletPrefab: {fileID: 5624400649870183312, guid: 1116c62423ca4ed42866becd723ab502, type: 3}
   _gunParameters:
   - {fileID: 11400000, guid: 7d3119706c45cac4a9eea26177687eb1, type: 2}
   - {fileID: 11400000, guid: 76c0fc7d8c9df49449e9e3bbf20feeed, type: 2}
@@ -41726,7 +41759,7 @@ GameObject:
   - component: {fileID: 1663939181}
   m_Layer: 0
   m_Name: Character Holder - Character Controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
