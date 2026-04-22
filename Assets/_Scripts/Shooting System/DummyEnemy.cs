@@ -14,7 +14,7 @@ public class DummyEnemy : MonoBehaviour, IHittable
         _dummyRigidbody = GetComponent<Rigidbody>();
         _hitTextMesh.gameObject.SetActive(false);
     }
-
+    
     private void Start()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;

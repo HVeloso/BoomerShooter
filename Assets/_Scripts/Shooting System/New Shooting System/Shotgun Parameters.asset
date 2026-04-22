@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shotgun Parameters
   m_EditorClassIdentifier: 
   _gunName: Escopeta
-  _damage: 1
+  _damage: 1.5
   _speed: 50
   _fireRate: 0.7
   _range: 7
