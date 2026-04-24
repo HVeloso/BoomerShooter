@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CharacterCameraController : MonoBehaviour
 {
+    [Header("INPUT")]
+    [SerializeField] private GameObject _movementInputObj;
+    private IMovementInputHandler _movementInput;
+
     [Header("Camera References")]
     [SerializeField] private CinemachineCamera _cineCamera;
     [SerializeField] private CinemachineInputAxisController _cameraInputs;
@@ -20,18 +24,12 @@ public class CharacterCameraController : MonoBehaviour
     [SerializeField][Min(0)] private float _maxRollAngle;
 
     // Rool Parameters
-    private Vector2 _rollDirection;
     private float _rollValue; // Rotação no eixo z (gira para os lados)
 
     // MonoBehaviour
-    private void OnEnable()
+    private void Awake()
     {
-        PlayerInputsHandler.MovementDirectionInputed += OnMoveInputed;
-    }
-
-    private void OnDisable()
-    {
-        PlayerInputsHandler.MovementDirectionInputed -= OnMoveInputed;
+        LoadInterfaces();
     }
 
     private void Start()
@@ -51,9 +49,9 @@ public class CharacterCameraController : MonoBehaviour
     }
 
     // Inputs
-    private void OnMoveInputed(Vector2 inputDirection)
+    private void LoadInterfaces()
     {
-        _rollDirection = inputDirection;
+        InterfaceTreatment.TryExtractInterface(_movementInputObj, out _movementInput);
     }
 
     // Initialization
@@ -69,9 +67,10 @@ public class CharacterCameraController : MonoBehaviour
     private void UpdateCameraRoll()
     {
         float targetRoll = 0f;
+        float rollDirection = _movementInput.MovementDirection.x;
 
-        if (_rollDirection.x != 0f)
-            targetRoll = -Mathf.Sign(_rollDirection.x) * _maxRollAngle;
+        if (rollDirection != 0f)
+            targetRoll = -Mathf.Sign(rollDirection) * _maxRollAngle;
 
         _rollValue = Mathf.LerpAngle(_rollValue, targetRoll, _cameraRollVelocity * Time.deltaTime);
         _cineCamera.Lens.Dutch = _rollValue;

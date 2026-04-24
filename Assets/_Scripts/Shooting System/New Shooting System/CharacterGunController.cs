@@ -4,33 +4,44 @@ using UnityEngine;
 
 public class CharacterGunController : MonoBehaviour
 {
+    [Header("INPUT")]
+    [SerializeField] private GameObject _weaponInputObj;
+    private IWeaponInputHandler _weaponInput;
+
+    [Header("UI")]
     [SerializeField] private TextMeshProUGUI _gunNameTextMesh;
+
+    [Header("Guns Parameters")]
     [SerializeField] private List<GameObject> _gunPrefabs;
 
     private List<IGunHandler> _guns;
     private IGunHandler _currentGun;
     private int _gunIndex = 0;
 
-    private void OnEnable()
-    {
-        PlayerInputsHandler.ShootInputed += OnShootInputed;
-        PlayerInputsHandler.ScrollInputed += OnScrollInputed;
-    }
-
     private void OnDisable()
     {
-        PlayerInputsHandler.ShootInputed -= OnShootInputed;
-        PlayerInputsHandler.ScrollInputed -= OnScrollInputed;
+        _weaponInput.AttackInputed += OnShootInputed;
+        _weaponInput.ScrollInputed += OnScrollInputed;
     }
 
     private void Awake()
     {
+        LoadInterfaces();
         InitializeGunList();
     }
 
     private void Start()
     {
         UpdateCurrentGun();
+    }
+
+    private void LoadInterfaces()
+    {
+        if (InterfaceTreatment.TryExtractInterface(_weaponInputObj, out _weaponInput))
+        {
+            _weaponInput.AttackInputed += OnShootInputed;
+            _weaponInput.ScrollInputed += OnScrollInputed;
+        }
     }
 
     private void OnScrollInputed(float value)

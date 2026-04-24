@@ -1,16 +1,18 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
+public class CharacterControllerHandler : MonoBehaviour
 {
     // Components
     private CharacterController _characterController;
 
-    // Immutable Parameters
-    private readonly float _groundStickForce = -1;
-
     // Parameters
+    [Header("INPUT")]
+    [SerializeField] private GameObject _movementInputObj;
+    private IMovementInputHandler _movementInput;
+
     [Header("Movement Parameters")]
+    [SerializeField] private Transform _characterRotationReference;
     [SerializeField, Min(0)] private float smoothValue = 0.05f;
     [SerializeField, Min(0)] private float _moveSpeed = 15.0f;
     [SerializeField, Min(0)] private float _airControlMultiplier = 1.2f;
@@ -28,9 +30,9 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     [Header("Gravity Parameters")]
     [SerializeField, Min(0)] private float _gravity = 35.0f;
     [SerializeField, Min(0)] private float _fallGravityMultiplier = 1.5f;
+    [SerializeField] private float _groundStickForce = -1;
 
     // Horizontal Movement
-    private Vector3 _movementDirection;
     private Vector3 _currentHorizontal;
     private Vector3 _horizontalVelocitySmooth; // Internal factor that SmoothDamp uses to calculate smoothing over time.
 
@@ -39,8 +41,8 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     private int _currentJumpsInAir;
 
     // States
-    private bool _isGrounded;
     private bool _jumpRequested;
+    private bool _isGrounded;
     private bool _hasJumped; // Has Jumped exists cuz if the player was launched up from an enemy or a scenario prop the gravity multiplier will not be active.
 
     // Timer
@@ -48,39 +50,46 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
     private float _coyoteTimer;
 
     // MonoBehaviours
+    private void OnDisable()
+    {
+        _movementInput.JumpPressed -= OnJumpPressed;
+    }
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        LoadInterfaces();
     }
 
     private void Update()
     {
         UpdateTimer();
 
-        GroundCheck();
-        HandleJump();
         ApplyGravity();
+        HandleJump();
         HandleMovement();
+        GroundCheck();
+    }
+
+    private void LoadInterfaces()
+    {
+        if (InterfaceTreatment.TryExtractInterface(_movementInputObj, out _movementInput))
+        {
+            _movementInput.JumpPressed += OnJumpPressed;
+        }
     }
 
     // Input Functions
-    public void SetMovementDirection(Vector3 movementDirection)
-    {
-        movementDirection.y = 0f;
-        _movementDirection = movementDirection.normalized;
-    }
-
-    public void UpdateJumpInput(bool isJumpPressed)
+    private void OnJumpPressed(bool isJumpPressed)
     {
         if (isJumpPressed)
         {
             if (_isGrounded) _jumpRequested = true;
-            else _currentJumpsInAir--;
-            
+
             _jumpBufferTimer = _jumpBufferToleranceTime;
             return;
         }
-        
+
         if (_allowJumpCut)
         {
             _jumpBufferTimer = 0f;
@@ -110,10 +119,13 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
 
     private void HandleJump()
     {
-        bool canJump = _isGrounded || _coyoteTimer > 0f || _currentJumpsInAir >= 0;
+        bool canJump = _isGrounded || _coyoteTimer > 0f || _currentJumpsInAir > 0;
         bool hasBufferedJump = _jumpRequested || _jumpBufferTimer > 0f;
 
         if (!canJump || !hasBufferedJump) return;
+
+        if (!_isGrounded && _coyoteTimer <= 0f)
+            _currentJumpsInAir--;
 
         _verticalVelocity = GetJumpForce();
 
@@ -154,7 +166,18 @@ public class CharacterControllerHandler : MonoBehaviour, IBodyHandler
         if (!_isGrounded)
             currentMoveSpeed *= _airControlMultiplier;
 
-        return _movementDirection * currentMoveSpeed;
+        Vector3 characterForward = _characterRotationReference.forward;
+        characterForward.y = 0f;
+        characterForward.Normalize();
+
+        Vector3 characterRight = _characterRotationReference.right;
+        characterRight.y = 0f;
+        characterRight.Normalize();
+
+        Vector3 movementDirection = characterForward * _movementInput.MovementDirection.y;
+        movementDirection += characterRight * _movementInput.MovementDirection.x;
+
+        return movementDirection * currentMoveSpeed;
     }
 
     // Functions for calculating values
