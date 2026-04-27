@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ad47105055aba49876bacaf401ec20, type: 3}
+  m_Name: Shotgun Parameters
+  m_EditorClassIdentifier: 
+  _gunName: Escopeta
+  _fireRate: 0.5
+  _spreadAngle: 5
+  _gunDamage: -7
+  _damagePerProjectile: 6
+  _totalDamage: 42
+  _gunSpeed: -10
+  _totalSpeed: 60
+  _gunRange: 5
+  _totalRange: 35
+  _bulletParameters: {fileID: 11400000, guid: 4cad8c056722303458ab177fe3b62e06, type: 2}

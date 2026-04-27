@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ad47105055aba49876bacaf401ec20, type: 3}
+  m_Name: Rifle Parameters
+  m_EditorClassIdentifier: 
+  _gunName: Rifle
+  _fireRate: 1
+  _spreadAngle: 0
+  _gunDamage: 10
+  _damagePerProjectile: 40
+  _totalDamage: 40
+  _gunSpeed: 20
+  _totalSpeed: 170
+  _gunRange: 0
+  _totalRange: 150
+  _bulletParameters: {fileID: 11400000, guid: 1cb418b1b2e1d8a45b084a6ffc199583, type: 2}
