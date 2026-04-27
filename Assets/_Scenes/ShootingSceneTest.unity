@@ -1596,6 +1596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19cf5a1efd94e8b48aa77c6c6605114d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _horizontalRange: 5
   _textPrefab: {fileID: 4282255197851117939, guid: e9eb8bf1a78a27d45a55a7d071df2558, type: 3}
 --- !u!4 &234125297
 Transform:
@@ -1973,7 +1974,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1761956933296572381, guid: ff8eab86242850e4e86a6bfd6e19003b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.19
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 1761956933296572381, guid: ff8eab86242850e4e86a6bfd6e19003b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -13123,7 +13124,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1761956933296572381, guid: ff8eab86242850e4e86a6bfd6e19003b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.19
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 1761956933296572381, guid: ff8eab86242850e4e86a6bfd6e19003b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -20285,7 +20286,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1761956933296572381, guid: ff8eab86242850e4e86a6bfd6e19003b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.19
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 1761956933296572381, guid: ff8eab86242850e4e86a6bfd6e19003b, type: 3}
       propertyPath: m_LocalPosition.y

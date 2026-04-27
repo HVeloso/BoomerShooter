@@ -65,7 +65,7 @@ public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
             _shootingCooldown -= Time.deltaTime;
     }
     
-    protected Vector3 GerSpreadDirection(Vector3 bulletFoward)
+    protected Vector3 GetSpreadDirection(Vector3 bulletFoward)
     {
         float spread = _parameters.SpreadAngle;
         Quaternion randomAngle = Quaternion.Euler(
@@ -74,5 +74,13 @@ public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
             Random.Range(-spread, spread));
 
         return (randomAngle * bulletFoward).normalized;
+    }
+
+    protected Vector3 GetCameraRayHitPoint(Vector3 rayDirection, out RaycastHit cameraHit)
+    {
+        if (Physics.Raycast(_cameraTranform.position, rayDirection, out cameraHit, _parameters.TotalRange))
+            return cameraHit.point;
+
+        return _cameraTranform.position + (_cameraTranform.forward * _parameters.TotalRange);
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class DamageUIPopPool : MonoBehaviour
@@ -35,14 +36,14 @@ public class DamageUIPopPool : MonoBehaviour
 
             if (!newTextMesh.TryGetComponent(out damagePop))
                 throw new System.Exception($"The object {newTextMesh.name} is not recognized as a Projectile. IProjectileHandler interface is missing.");
-
+            
             damagePop.ObjectDisabled += OnObjectDisabled;
         }
-
-        spawnPoint += (player.position - spawnPoint).normalized * 0.15f;
+        
+        spawnPoint += (player.position - spawnPoint).normalized * 0.2f; // Trazer um pouco mais pra frente
         damagePop.StartPopAnimation(spawnPoint, player, damage.ToString("N0"));
     }
-
+    
     private void UnregisterEvents()
     {
         while(_textPool.TryDequeue(out DamagePopController pop))

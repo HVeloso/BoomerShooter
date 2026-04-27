@@ -6,7 +6,7 @@ public class RaycastGunController : BaseGunController
 
     protected override void Shoot()
     {
-        Vector3 bulletDirection = GerSpreadDirection(_cameraTranform.forward);
+        Vector3 bulletDirection = GetSpreadDirection(_cameraTranform.forward);
 
         // Get crosshair target point
         Vector3 shootEndPoint = GetCameraRayHitPoint(bulletDirection, out RaycastHit hit);
@@ -21,7 +21,7 @@ public class RaycastGunController : BaseGunController
             bulletDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
             shootEndPoint = GetGunRayHitPoint(bulletDirection, out hit);
 
-            // Visual FX
+            // Visual FX (Temp)
             DrawShootTrail(shootEndPoint, _lineTimeDuration);
         }
 
@@ -34,14 +34,6 @@ public class RaycastGunController : BaseGunController
             projectileParameters.SetHitPoint(shootEndPoint);
             hittable.Hit(projectileParameters);
         }
-    }
-
-    private Vector3 GetCameraRayHitPoint(Vector3 rayDirection, out RaycastHit cameraHit)
-    {
-        if (Physics.Raycast(_cameraTranform.position, rayDirection, out cameraHit, _parameters.TotalRange))
-            return cameraHit.point;
-
-        return _cameraTranform.position + (_cameraTranform.forward * _parameters.TotalRange);
     }
 
     private Vector3 GetGunRayHitPoint(Vector3 rayDirection, out RaycastHit gunHit)
