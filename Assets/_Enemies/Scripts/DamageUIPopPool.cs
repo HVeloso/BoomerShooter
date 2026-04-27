@@ -31,7 +31,7 @@ public class DamageUIPopPool : MonoBehaviour
     {
         if (!_textPool.TryDequeue(out DamagePopController damagePop))
         {
-            GameObject newTextMesh = Instantiate(_textPrefab);
+            GameObject newTextMesh = Instantiate(_textPrefab, transform);
 
             if (!newTextMesh.TryGetComponent(out damagePop))
                 throw new System.Exception($"The object {newTextMesh.name} is not recognized as a Projectile. IProjectileHandler interface is missing.");

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gunName: Rifle
   _fireRate: 1
-  _spreadAngle: 0
+  _spreadAngle: 0.2
   _gunDamage: 10
   _damagePerProjectile: 40
   _totalDamage: 40

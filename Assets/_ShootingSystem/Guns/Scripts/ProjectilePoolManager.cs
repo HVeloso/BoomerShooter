@@ -35,7 +35,7 @@ public class ProjectilePoolManager : MonoBehaviour
 
         if (!_projectilePool.TryDequeue(out IProjectileHandler projectileHandler))
         {
-            GameObject newProjectile = Instantiate(_projectilePrefab);
+            GameObject newProjectile = Instantiate(_projectilePrefab, transform);
             newProjectile.SetActive(false);
 
             if (!newProjectile.TryGetComponent(out projectileHandler))

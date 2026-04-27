@@ -69,6 +69,7 @@ public class CharacterControllerHandler : MonoBehaviour
         HandleJump();
         HandleMovement();
         GroundCheck();
+        CollisionCheck();
     }
 
     private void LoadInterfaces()
@@ -102,6 +103,14 @@ public class CharacterControllerHandler : MonoBehaviour
     }
 
     // Control Functions
+    private void CollisionCheck()
+    {
+        if (_characterController.collisionFlags != CollisionFlags.CollidedAbove) return;
+        if (_verticalVelocity <= 0f) return;
+
+        _verticalVelocity = 0f;
+    }
+
     private void GroundCheck()
     {
         _isGrounded = _characterController.isGrounded;
