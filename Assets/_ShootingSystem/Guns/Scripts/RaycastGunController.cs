@@ -19,19 +19,20 @@ public class RaycastGunController : BaseGunController
 
 
         // Checa se a arma está dentro de um objeto.
-        if (Physics.SphereCast(_bulletSpawnPoint.position, 0.1f, _bulletSpawnPoint.forward,
-            out RaycastHit sphereHit, 0.1f))
+        RaycastHit[] sphereHits = Physics.SphereCastAll(_bulletSpawnPoint.position, 0.1f, _bulletSpawnPoint.forward);
+
+        foreach (RaycastHit hit1 in sphereHits)
         {
-            Debug.Log("HIT!");
-            if (sphereHit.collider.TryGetComponent(out IHittable sphereHitable)) // Se sim acerta.
+            Debug.Log($"HIT! - {hit1.collider.name}");
+            if (hit1.collider.TryGetComponent(out IHittable sphereHitable)) // Se sim acerta.
             {
                 ProjectileParameters projectileParameters = new(_cameraTranform.position, _cameraTranform.forward, _parameters);
                 projectileParameters.SetHitPoint(_bulletSpawnPoint.position);
                 sphereHitable.Hit(projectileParameters);
             }
-
-            return;
         }
+
+        if (sphereHits.Length > 0) return;
 
         // Pega o ponto de impacto da crosshair
         Vector3 hitPoint = GetCameraRayHitPoint(_cameraTranform.forward, out RaycastHit hit);
