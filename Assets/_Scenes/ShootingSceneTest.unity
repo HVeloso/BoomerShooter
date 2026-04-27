@@ -19621,6 +19621,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 867299203032033257, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1542357759490846255, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 191
@@ -19629,9 +19633,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Weapon Controller '
       objectReference: {fileID: 0}
+    - target: {fileID: 2435275813982305801, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2776824714433518481, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
       propertyPath: m_Name
       value: Character Holder - Character Controller
+      objectReference: {fileID: 0}
+    - target: {fileID: 2776824714433518481, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799984149462777218, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4581211537267849704, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
       propertyPath: _movementInputObj
@@ -19640,6 +19656,22 @@ PrefabInstance:
     - target: {fileID: 5463772639326444657, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
       propertyPath: m_Name
       value: _Weapon Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 5463772639326444657, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224004495108238167, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7395912424318824401, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8190599111187875400, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8322311154102581946, guid: 2680f7ffaa16c6442aee3eaada580e1e, type: 3}
       propertyPath: _movementInputObj

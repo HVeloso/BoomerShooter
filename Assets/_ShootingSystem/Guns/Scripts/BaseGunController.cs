@@ -3,6 +3,9 @@ using UnityEngine;
 
 public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
 {
+    // Consts
+    protected const string HITTABLE_LAYER = "Hittable";
+
     [Header("Gun Parameters")]
     [SerializeField] protected GunParameters _parameters;
     [SerializeField] private GameObject _gunHolder;

@@ -6,34 +6,81 @@ public class RaycastGunController : BaseGunController
 
     protected override void Shoot()
     {
-        Vector3 bulletDirection = GetSpreadDirection(_cameraTranform.forward);
+        // Ideia 1
+        // Checar se a arma está dentro de um objeto. - SphereCast
+        // Se sim: Acertar esse objeto.
 
-        // Get crosshair target point
-        Vector3 shootEndPoint = GetCameraRayHitPoint(bulletDirection, out RaycastHit hit);
+        // Pegar o ponto de acerto com um Raycast
+            // O alvo está antes do cano da arma?
+                // Se sim: De dano no alvo - Sem efeito de tracing
+                // Se não:
+                    // Jogar um raio do cano da arma até o ponto de acerto do raycast anterior
+                        // Se encontrar algo: Acertar esse objeto.
 
-        // Checks if gun is inside an object
-        float distanceToEndPoint = Vector3.Distance(shootEndPoint, _cameraTranform.position);
-        float distanceToBulletSpawn = Vector3.Distance(_bulletSpawnPoint.position, _cameraTranform.position);
 
-        if (distanceToEndPoint > distanceToBulletSpawn) // Gun is not inside an object
+        // Checa se a arma está dentro de um objeto.
+        if (Physics.SphereCast(_bulletSpawnPoint.position, 0.1f, _bulletSpawnPoint.forward,
+            out RaycastHit sphereHit, 0.1f))
         {
-            // Shoot ray from the gun
-            bulletDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
-            shootEndPoint = GetGunRayHitPoint(bulletDirection, out hit);
+            Debug.Log("HIT!");
+            if (sphereHit.collider.TryGetComponent(out IHittable sphereHitable)) // Se sim acerta.
+            {
+                ProjectileParameters projectileParameters = new(_cameraTranform.position, _cameraTranform.forward, _parameters);
+                projectileParameters.SetHitPoint(_bulletSpawnPoint.position);
+                sphereHitable.Hit(projectileParameters);
+            }
 
-            // Visual FX (Temp)
-            DrawShootTrail(shootEndPoint, _lineTimeDuration);
+            return;
         }
 
-        // Checks if an hittable object was hitted
-        if (hit.collider == null) return;
+        // Pega o ponto de impacto da crosshair
+        Vector3 hitPoint = GetCameraRayHitPoint(_cameraTranform.forward, out RaycastHit hit);
 
-        if (hit.collider.TryGetComponent(out IHittable hittable))
+        float distanceToHitPoint = Vector3.Distance(_cameraTranform.position, hitPoint);
+        float distanceToBulletSpawn = Vector3.Distance(_cameraTranform.position, _bulletSpawnPoint.position);
+
+        if (distanceToHitPoint <=  distanceToBulletSpawn) // Alvo esta muito proximo
         {
-            ProjectileParameters projectileParameters = new(_cameraTranform.position, bulletDirection, _parameters);
-            projectileParameters.SetHitPoint(shootEndPoint);
-            hittable.Hit(projectileParameters);
+            if (hit.collider.TryGetComponent(out IHittable sphereHitable)) // Acerta
+            {
+                ProjectileParameters projectileParameters = new(_cameraTranform.position, _cameraTranform.forward, _parameters);
+                projectileParameters.SetHitPoint(hitPoint);
+                sphereHitable.Hit(projectileParameters);
+            }
+
+            DrawShootTrail(hitPoint);
+            return;
         }
+
+        // Atira um raio do cano da arma.
+        Vector3 shootDirection = (hitPoint - _bulletSpawnPoint.position).normalized;
+        hitPoint = GetGunRayHitPoint(shootDirection, out hit);
+
+        if (hit.collider != null)
+        {
+            if (hit.collider.TryGetComponent(out IHittable sphereHitable)) // Acerta
+            {
+                ProjectileParameters projectileParameters = new(_cameraTranform.position, _cameraTranform.forward, _parameters);
+                projectileParameters.SetHitPoint(hitPoint);
+                sphereHitable.Hit(projectileParameters);
+            }
+        }
+
+            DrawShootTrail(hitPoint);
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        // Ideia 2
+        // Dispara um raio em direção a crosshair.
+           // O alvo está antes do cano da arma?
+                // Se sim: Dê dano no alvo - Sem efeito de tracing.
+                // Se não:
+                    // Checar se a arma está dentro de um objeto.
+                        // Se sim: Dê dano no alvo - Sem efeito de tracing.
+                        // Se não:
+                        // Se encontrar algo: Acertar esse objeto.
+                            // Dispara um raio a partir do cano.
+                            // Se encontrar algo: Acertar esse objeto.
     }
 
     private Vector3 GetGunRayHitPoint(Vector3 rayDirection, out RaycastHit gunHit)
@@ -45,7 +92,7 @@ public class RaycastGunController : BaseGunController
     }
 
     // Visual FX (Temp)
-    private void DrawShootTrail(Vector3 hitPosition, float time)
+    private void DrawShootTrail(Vector3 hitPosition)
     {
         TrailRenderer line = new GameObject("Line").AddComponent<TrailRenderer>();
 
@@ -54,6 +101,11 @@ public class RaycastGunController : BaseGunController
         line.gameObject.transform.position = _bulletSpawnPoint.position;
         line.AddPosition(hitPosition);
 
-        Destroy(line.gameObject, time);
+        Destroy(line.gameObject, _lineTimeDuration);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(_bulletSpawnPoint.position, 0.1f);
     }
 }
