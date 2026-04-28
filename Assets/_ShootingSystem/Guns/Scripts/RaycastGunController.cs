@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 public class RaycastGunController : BaseGunController
 {
@@ -7,49 +6,42 @@ public class RaycastGunController : BaseGunController
 
     protected override void Shoot()
     {
+        // Checar se a arma está dentro de alvo.
         if (CheckIfGunIsInsideSomething(out RaycastHit hit))
         {
             Vector3 direction = (_bulletSpawnPoint.position - _gunBasePoint.position).normalized;
 
             TryHit(hit.collider.transform, hit.point, direction);
+            DrawShootTrail(hit.point);
             return;
         }
 
+        // Checar se o objeto atingido está muito perto
         Vector3 spreadDirection = GetSpreadDirection(_cameraTranform.forward);
-        Vector3 shootEndPoint = GetCameraRayHitPoint(spreadDirection, out RaycastHit hit);
+        Vector3 shootEndPoint = GetCameraRayHitPoint(spreadDirection, out hit);
 
+        float distanceToHitPoint = Vector3.Distance(_cameraTranform.position, shootEndPoint);
+        float distanceToBulletSpawn = Vector3.Distance(_cameraTranform.position, _bulletSpawnPoint.position);
 
+        if (distanceToHitPoint < distanceToBulletSpawn)
+        {
+            TryHit(hit.collider.transform, shootEndPoint, _cameraTranform.forward);
+            DrawShootTrail(shootEndPoint);
+            return;
+        }
 
-        // -------------------------
+        // Disparar raio a partir da arma
+        Vector3 gunDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
+        Vector3 gunHitPoint = GetGunRayHitPoint(gunDirection, out hit);
 
-        //Vector3 bulletDirection = GetSpreadDirection(_cameraTranform.forward);
+        if (hit.collider != null)
+        {
+            TryHit(hit.collider.transform, hit.point, gunHitPoint);
+            DrawShootTrail(hit.point);
+            return;
+        }
 
-        //// Get crosshair target point
-        //Vector3 shootEndPoint = GetCameraRayHitPoint(bulletDirection, out RaycastHit hit);
-
-        //// Checks if gun is inside an object
-        //float distanceToEndPoint = Vector3.Distance(shootEndPoint, _cameraTranform.position);
-        //float distanceToBulletSpawn = Vector3.Distance(_bulletSpawnPoint.position, _cameraTranform.position);
-
-        //if (distanceToEndPoint > distanceToBulletSpawn) // Gun is not inside an object
-        //{
-        //    // Shoot ray from the gun
-        //    bulletDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
-        //    shootEndPoint = GetGunRayHitPoint(bulletDirection, out hit);
-
-        //    // Visual FX (Temp)
-        //    DrawShootTrail(shootEndPoint, _lineTimeDuration);
-        //}
-
-        //// Checks if an hittable object was hitted
-        //if (hit.collider == null) return;
-
-        //if (hit.collider.TryGetComponent(out IHittable hittable))
-        //{
-        //    ProjectileParameters projectileParameters = new(_cameraTranform.position, bulletDirection, _parameters);
-        //    projectileParameters.SetHitPoint(shootEndPoint);
-        //    hittable.Hit(projectileParameters);
-        //}
+        DrawShootTrail(gunHitPoint);
     }
 
     private bool TryHit(Transform objectHitted, Vector3 hitPoint, Vector3 bulletDirection)
@@ -75,7 +67,7 @@ public class RaycastGunController : BaseGunController
     }
 
     // Visual FX (Temp)
-    private void DrawShootTrail(Vector3 hitPosition, float time)
+    private void DrawShootTrail(Vector3 hitPosition)
     {
         TrailRenderer line = new GameObject("Line").AddComponent<TrailRenderer>();
 
@@ -84,6 +76,6 @@ public class RaycastGunController : BaseGunController
         line.gameObject.transform.position = _bulletSpawnPoint.position;
         line.AddPosition(hitPosition);
 
-        Destroy(line.gameObject, time);
+        Destroy(line.gameObject, _lineTimeDuration);
     }
 }

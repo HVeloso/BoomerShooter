@@ -48,6 +48,7 @@ MonoBehaviour:
   _parameters: {fileID: 11400000, guid: 7d3119706c45cac4a9eea26177687eb1, type: 2}
   _gunHolder: {fileID: 7885867724665000542}
   _bulletSpawnPoint: {fileID: 6899654196373536858}
+  _gunBasePoint: {fileID: 7578530741680373635}
   _bulletPrefab: {fileID: 5624400649870183312, guid: 1116c62423ca4ed42866becd723ab502, type: 3}
 --- !u!1 &758462540767639548
 GameObject:
@@ -75,6 +76,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.45500004, z: 1.9229999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2217176085587525484}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3003385706183613685
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7578530741680373635}
+  m_Layer: 6
+  m_Name: Gun Base Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7578530741680373635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003385706183613685}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.45500004, z: -0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -111,6 +143,7 @@ Transform:
   m_Children:
   - {fileID: 4476564437709797164}
   - {fileID: 6899654196373536858}
+  - {fileID: 7578530741680373635}
   m_Father: {fileID: 8083028683544120141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4149304949528580295

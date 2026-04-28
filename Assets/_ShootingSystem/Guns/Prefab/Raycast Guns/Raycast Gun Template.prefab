@@ -31,6 +31,7 @@ Transform:
   m_Children:
   - {fileID: 1144152371339405466}
   - {fileID: 4523571697073020845}
+  - {fileID: 8170477301384408410}
   m_Father: {fileID: 2674737806910343525}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2382750303637905470
@@ -57,13 +58,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2382750303637905470}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.45500004, z: 1.9229999}
+  m_LocalRotation: {x: -0.09228847, y: -0.17321508, z: -0.016305095, w: 0.980415}
+  m_LocalPosition: {x: -0.732, y: 0.879, z: 2.058}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3885800974964680226}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -10.755, y: -20.039, z: 0}
 --- !u!1 &6624448065997308002
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,6 +113,38 @@ MonoBehaviour:
   _parameters: {fileID: 11400000, guid: b02d76f1035187045aacaa2b101006e7, type: 2}
   _gunHolder: {fileID: 1917890861476228164}
   _bulletSpawnPoint: {fileID: 4523571697073020845}
+  _gunBasePoint: {fileID: 8170477301384408410}
+--- !u!1 &7707347252605994955
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8170477301384408410}
+  m_Layer: 6
+  m_Name: Gun Base Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8170477301384408410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7707347252605994955}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.09228847, y: -0.17321508, z: -0.016305095, w: 0.980415}
+  m_LocalPosition: {x: 0.393, y: 0.256, z: -1.025}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3885800974964680226}
+  m_LocalEulerAnglesHint: {x: -10.755, y: -20.039, z: 0}
 --- !u!1001 &606404819496095601
 PrefabInstance:
   m_ObjectHideFlags: 0
