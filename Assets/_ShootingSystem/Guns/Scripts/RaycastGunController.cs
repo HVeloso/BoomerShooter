@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class RaycastGunController : BaseGunController
 {
@@ -6,34 +7,63 @@ public class RaycastGunController : BaseGunController
 
     protected override void Shoot()
     {
-        Vector3 bulletDirection = GetSpreadDirection(_cameraTranform.forward);
-
-        // Get crosshair target point
-        Vector3 shootEndPoint = GetCameraRayHitPoint(bulletDirection, out RaycastHit hit);
-
-        // Checks if gun is inside an object
-        float distanceToEndPoint = Vector3.Distance(shootEndPoint, _cameraTranform.position);
-        float distanceToBulletSpawn = Vector3.Distance(_bulletSpawnPoint.position, _cameraTranform.position);
-
-        if (distanceToEndPoint > distanceToBulletSpawn) // Gun is not inside an object
+        if (CheckIfGunIsInsideSomething(out RaycastHit hit))
         {
-            // Shoot ray from the gun
-            bulletDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
-            shootEndPoint = GetGunRayHitPoint(bulletDirection, out hit);
+            Vector3 direction = (_bulletSpawnPoint.position - _gunBasePoint.position).normalized;
 
-            // Visual FX (Temp)
-            DrawShootTrail(shootEndPoint, _lineTimeDuration);
+            TryHit(hit.collider.transform, hit.point, direction);
+            return;
         }
 
-        // Checks if an hittable object was hitted
-        if (hit.collider == null) return;
+        Vector3 spreadDirection = GetSpreadDirection(_cameraTranform.forward);
+        Vector3 shootEndPoint = GetCameraRayHitPoint(spreadDirection, out RaycastHit hit);
 
-        if (hit.collider.TryGetComponent(out IHittable hittable))
+
+
+        // -------------------------
+
+        //Vector3 bulletDirection = GetSpreadDirection(_cameraTranform.forward);
+
+        //// Get crosshair target point
+        //Vector3 shootEndPoint = GetCameraRayHitPoint(bulletDirection, out RaycastHit hit);
+
+        //// Checks if gun is inside an object
+        //float distanceToEndPoint = Vector3.Distance(shootEndPoint, _cameraTranform.position);
+        //float distanceToBulletSpawn = Vector3.Distance(_bulletSpawnPoint.position, _cameraTranform.position);
+
+        //if (distanceToEndPoint > distanceToBulletSpawn) // Gun is not inside an object
+        //{
+        //    // Shoot ray from the gun
+        //    bulletDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
+        //    shootEndPoint = GetGunRayHitPoint(bulletDirection, out hit);
+
+        //    // Visual FX (Temp)
+        //    DrawShootTrail(shootEndPoint, _lineTimeDuration);
+        //}
+
+        //// Checks if an hittable object was hitted
+        //if (hit.collider == null) return;
+
+        //if (hit.collider.TryGetComponent(out IHittable hittable))
+        //{
+        //    ProjectileParameters projectileParameters = new(_cameraTranform.position, bulletDirection, _parameters);
+        //    projectileParameters.SetHitPoint(shootEndPoint);
+        //    hittable.Hit(projectileParameters);
+        //}
+    }
+
+    private bool TryHit(Transform objectHitted, Vector3 hitPoint, Vector3 bulletDirection)
+    {
+        if (objectHitted.TryGetComponent(out IHittable hittable))
         {
             ProjectileParameters projectileParameters = new(_cameraTranform.position, bulletDirection, _parameters);
-            projectileParameters.SetHitPoint(shootEndPoint);
+            projectileParameters.SetHitPoint(hitPoint);
             hittable.Hit(projectileParameters);
+
+            return true;
         }
+
+        return false;
     }
 
     private Vector3 GetGunRayHitPoint(Vector3 rayDirection, out RaycastHit gunHit)

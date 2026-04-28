@@ -7,6 +7,9 @@ public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
     [SerializeField] protected GunParameters _parameters;
     [SerializeField] private GameObject _gunHolder;
     [SerializeField] protected Transform _bulletSpawnPoint;
+    [Tooltip("Deve ser posicionado no lado oposto do bullet spawn point." +
+        "É usado como ponto de disparo de raycast pra verificar colisão com paredes.")]
+    [SerializeField] protected Transform _gunBasePoint;
 
     string IWeaponHandler.WeaponName => _parameters.GunName;
 
@@ -82,5 +85,13 @@ public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
             return cameraHit.point;
 
         return _cameraTranform.position + (_cameraTranform.forward * _parameters.TotalRange);
+    }
+
+    protected bool CheckIfGunIsInsideSomething(out RaycastHit hit)
+    {
+        Vector3 direction = (_bulletSpawnPoint.position - _gunBasePoint.position).normalized;
+        float distance = Vector3.Distance(_bulletSpawnPoint.position, _gunBasePoint.position);
+
+        return Physics.Raycast(_gunBasePoint.position, direction, out hit, distance);
     }
 }
