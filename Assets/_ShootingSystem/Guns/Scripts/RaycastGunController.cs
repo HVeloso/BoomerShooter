@@ -2,46 +2,27 @@ using UnityEngine;
 
 public class RaycastGunController : BaseGunController
 {
-    private const float _lineTimeDuration = 0.15f;
-
     protected override void Shoot()
     {
-        // Checar se a arma está dentro de alvo.
+        Vector3 shootHitPoint;
+        Vector3 shootDirection;
+
         if (CheckIfGunIsInsideSomething(out RaycastHit hit))
         {
-            Vector3 direction = (_bulletSpawnPoint.position - _gunBasePoint.position).normalized;
-
-            TryHit(hit.collider.transform, hit.point, direction);
-            DrawShootTrail(hit.point);
-            return;
+            shootDirection = (_bulletSpawnPoint.position - _gunBasePoint.position).normalized;
+            shootHitPoint = hit.point;
         }
-
-        // Checar se o objeto atingido está muito perto
-        Vector3 spreadDirection = GetSpreadDirection(_cameraTranform.forward);
-        Vector3 shootEndPoint = GetCameraRayHitPoint(spreadDirection, out hit);
-
-        float distanceToHitPoint = Vector3.Distance(_cameraTranform.position, shootEndPoint);
-        float distanceToBulletSpawn = Vector3.Distance(_cameraTranform.position, _bulletSpawnPoint.position);
-
-        if (distanceToHitPoint < distanceToBulletSpawn)
+        else
         {
-            TryHit(hit.collider.transform, shootEndPoint, _cameraTranform.forward);
-            DrawShootTrail(shootEndPoint);
-            return;
+            Vector3 spreadHitPoint = GetSpreadHitPoint(_cameraTranform.position, _cameraTranform.forward);
+            shootDirection = (spreadHitPoint - _bulletSpawnPoint.position).normalized;
+            shootHitPoint = GetGunRayHitPoint(shootDirection, out hit);
         }
-
-        // Disparar raio a partir da arma
-        Vector3 gunDirection = (shootEndPoint - _bulletSpawnPoint.position).normalized;
-        Vector3 gunHitPoint = GetGunRayHitPoint(gunDirection, out hit);
 
         if (hit.collider != null)
-        {
-            TryHit(hit.collider.transform, hit.point, gunHitPoint);
-            DrawShootTrail(hit.point);
-            return;
-        }
+            TryHit(hit.collider.transform, shootHitPoint, shootDirection);
 
-        DrawShootTrail(gunHitPoint);
+        DrawShootTrail(shootHitPoint);
     }
 
     private bool TryHit(Transform objectHitted, Vector3 hitPoint, Vector3 bulletDirection)
@@ -66,7 +47,9 @@ public class RaycastGunController : BaseGunController
         return _bulletSpawnPoint.position + (rayDirection * _parameters.TotalRange);
     }
 
-    // Visual FX (Temp)
+    // Visual FX (Temp) --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    private const float _lineTimeDuration = 0.15f;
+
     private void DrawShootTrail(Vector3 hitPosition)
     {
         TrailRenderer line = new GameObject("Line").AddComponent<TrailRenderer>();

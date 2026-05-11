@@ -1,5 +1,7 @@
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
 {
@@ -67,7 +69,7 @@ public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
         if (_shootingCooldown > 0f)
             _shootingCooldown -= Time.deltaTime;
     }
-    
+
     protected Vector3 GetSpreadDirection(Vector3 bulletFoward)
     {
         float spread = _parameters.SpreadAngle;
@@ -85,6 +87,16 @@ public abstract class BaseGunController : MonoBehaviour, IWeaponHandler
             return cameraHit.point;
 
         return _cameraTranform.position + (_cameraTranform.forward * _parameters.TotalRange);
+    }
+
+    protected Vector3 GetSpreadHitPoint(Vector3 origin,Vector3 defaultFoward)
+    {
+        Vector3 spreadDirection = GetSpreadDirection(defaultFoward);
+
+        if (Physics.Raycast(origin, spreadDirection, out RaycastHit hit, _parameters.TotalRange))
+            return hit.point;
+
+        return origin + (defaultFoward * _parameters.TotalRange);
     }
 
     protected bool CheckIfGunIsInsideSomething(out RaycastHit hit)
