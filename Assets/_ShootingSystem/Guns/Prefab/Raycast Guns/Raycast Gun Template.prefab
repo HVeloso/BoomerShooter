@@ -114,6 +114,9 @@ MonoBehaviour:
   _gunHolder: {fileID: 1917890861476228164}
   _bulletSpawnPoint: {fileID: 4523571697073020845}
   _gunBasePoint: {fileID: 8170477301384408410}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &7707347252605994955
 GameObject:
   m_ObjectHideFlags: 0

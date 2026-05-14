@@ -146,6 +146,10 @@ PrefabInstance:
       propertyPath: _parameters
       value: 
       objectReference: {fileID: 11400000, guid: 76c0fc7d8c9df49449e9e3bbf20feeed, type: 2}
+    - target: {fileID: 2601146651579029220, guid: 9499809b6ceaac240954efebdb8c6c63, type: 3}
+      propertyPath: _layersToHit.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6899654196373536858, guid: 9499809b6ceaac240954efebdb8c6c63, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

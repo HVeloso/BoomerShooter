@@ -7,14 +7,14 @@ public class RaycastGunController : BaseGunController
         Vector3 shootHitPoint;
         Vector3 shootDirection;
 
-        if (CheckIfGunIsInsideSomething(out RaycastHit hit))
+        if (IsGunInsideSomething(out RaycastHit hit))
         {
-            shootDirection = (_bulletSpawnPoint.position - _gunBasePoint.position).normalized;
+            shootDirection = GunDirection;
             shootHitPoint = hit.point;
         }
         else
         {
-            Vector3 spreadHitPoint = GetSpreadHitPoint(_cameraTranform.position, _cameraTranform.forward);
+            Vector3 spreadHitPoint = GetSpreadHitPoint(_cameraTransform.position, _cameraTransform.forward);
             shootDirection = (spreadHitPoint - _bulletSpawnPoint.position).normalized;
             shootHitPoint = GetGunRayHitPoint(shootDirection, out hit);
         }
@@ -22,23 +22,12 @@ public class RaycastGunController : BaseGunController
         if (hit.collider != null)
             TryHit(hit.collider.transform, shootHitPoint, shootDirection);
 
+        // Colocar VFX & SFX - - - - -
+        // Tornar o VFX temporário em um script gerenciador próprio.
+        // Colocar esse gerenciador num service locator.
         DrawShootTrail(shootHitPoint);
     }
-
-    private bool TryHit(Transform objectHitted, Vector3 hitPoint, Vector3 bulletDirection)
-    {
-        if (objectHitted.TryGetComponent(out IHittable hittable))
-        {
-            ProjectileParameters projectileParameters = new(_cameraTranform.position, bulletDirection, _parameters);
-            projectileParameters.SetHitPoint(hitPoint);
-            hittable.Hit(projectileParameters);
-
-            return true;
-        }
-
-        return false;
-    }
-
+    
     private Vector3 GetGunRayHitPoint(Vector3 rayDirection, out RaycastHit gunHit)
     {
         if (Physics.Raycast(_bulletSpawnPoint.position, rayDirection, out gunHit, _parameters.TotalRange))
@@ -48,6 +37,7 @@ public class RaycastGunController : BaseGunController
     }
 
     // Visual FX (Temp) --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     private const float _lineTimeDuration = 0.15f;
 
     private void DrawShootTrail(Vector3 hitPosition)

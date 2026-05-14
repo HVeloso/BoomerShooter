@@ -49,6 +49,9 @@ MonoBehaviour:
   _gunHolder: {fileID: 7885867724665000542}
   _bulletSpawnPoint: {fileID: 6899654196373536858}
   _gunBasePoint: {fileID: 7578530741680373635}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 1
   _bulletPrefab: {fileID: 5624400649870183312, guid: 1116c62423ca4ed42866becd723ab502, type: 3}
 --- !u!1 &758462540767639548
 GameObject:

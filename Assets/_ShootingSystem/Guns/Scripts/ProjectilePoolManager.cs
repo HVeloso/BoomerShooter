@@ -23,13 +23,13 @@ public class ProjectilePoolManager : MonoBehaviour
 
     private void SetSingleTon()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
             Destroy(gameObject);
 
         Instance = this;
     }
 
-    public void InstantiateProjectile(Vector3 originPoint, Vector3 direction, GunParameters gunParams)
+    public void InstantiateProjectile(Vector3 originPoint, Vector3 direction,GunParameters gunParams)
     {
         ProjectileParameters parameters = new(originPoint, direction, gunParams);
 
